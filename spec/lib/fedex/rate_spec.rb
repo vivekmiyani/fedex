@@ -193,18 +193,12 @@ module Fedex
       end
 
       context 'when there are no valid services available', :vcr do
-        let(:corrupted_shipper) { shipper.merge(state: 'Anywhere') }
-
-        let(:corrupted_rate) do
-          fedex.rate(
-            shipper: corrupted_shipper,
-            recipient: recipient,
-            packages: packages
-          )
+        let(:shipper) do
+          { name: 'Sender', company: 'Company', phone_number: '555-555-5555', address: 'Main Street', city: 'Harrison', state: 'Anywhere', postal_code: '72601', country_code: 'US' }
         end
 
         it 'returns empty array' do
-          expect(corrupted_rate).to eq []
+          expect(rates).to eq []
         end
       end
 
