@@ -7,9 +7,10 @@ module Fedex
     class Rate < Base
       # Sends post request to Fedex web service and parse the response, a Rate object is created if the response is successful
       def process_request
-        api_response = self.class.post(api_url, body: build_xml)
-        puts api_response if @debug
-        response = parse_response(api_response)
+        @request_xml = build_xml
+        @response_xml = self.class.post(api_url, body: @request_xml)
+        puts @response_xml if @debug
+        response = parse_response(@response_xml)
         if success?(response)
           rate_reply_details = response[:rate_reply][:rate_reply_details] || []
           rate_reply_details = [rate_reply_details] if rate_reply_details.is_a?(Hash)
@@ -19,7 +20,7 @@ module Fedex
             rate_details[:service_type] = rate_reply[:service_type]
             rate_details[:transit_time] = rate_reply[:transit_time]
             rate_details[:special_rating_applied] = rate_details[:special_rating_applied]
-            Fedex::Rate.new(rate_details)
+            Fedex::Rate.new(rate_details, request_xml: @request_xml, response_xml: @response_xml)
           end
         else
           error_message = begin
