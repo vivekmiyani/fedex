@@ -32,9 +32,7 @@ module Fedex
                   :total_base_charge,
                   :special_rating_applied
 
-    attr_reader :request_xml, :response_xml
-
-    def initialize(options = {}, request_xml: '', response_xml: '')
+    def initialize(options = {})
       @service_type = options[:service_type]
       @transit_time = options[:transit_time]
       @rate_type = options[:rate_type]
@@ -49,8 +47,6 @@ module Fedex
       @total_net_fedex_charge = (options[:total_net_fe_dex_charge] || {})[:amount]
       @total_rebates = (options[:total_rebates] || {})[:amount]
       @special_rating_applied = options[:special_rating_applied]
-      @request_xml = request_xml unless request_xml.nil?
-      @response_xml = response_xml unless response_xml.nil?
     end
   end
 end
