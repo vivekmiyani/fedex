@@ -4,7 +4,6 @@ require 'httparty'
 require 'nokogiri'
 require 'fedex/helpers'
 require 'fedex/rate'
-require 'fedex/rates'
 
 module Fedex
   module Request

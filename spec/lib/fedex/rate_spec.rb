@@ -49,15 +49,14 @@ module Fedex
 
         fedex.rate(rates_options)
       end
-      let(:rates_array) { rates.rates }
 
       shared_examples 'successful rate request' do
         it 'has a rate object' do
-          expect(rates_array.first).to be_an_instance_of(Rate)
+          expect(rates.first).to be_an_instance_of(Rate)
         end
         it 'includes the request and response' do
-          expect(rates.response_xml).to include 'RateReply'
-          expect(rates.request_xml).to include 'RateRequest'
+          expect(rates.first.response_xml).to include 'RateReply'
+          expect(rates.first.request_xml).to include 'RateRequest'
         end
       end
 
@@ -65,7 +64,7 @@ module Fedex
         it_behaves_like 'successful rate request'
 
         it 'should return a transit time' do
-          expect(rates_array.first.transit_time).not_to be_nil
+          expect(rates.first.transit_time).not_to be_nil
         end
       end
 
@@ -169,11 +168,11 @@ module Fedex
         it_behaves_like 'successful rate request'
 
         it 'returns a single rate' do
-          expect(rates_array.count).to eq 1
+          expect(rates.count).to eq 1
         end
 
         it 'has service_type attribute' do
-          rates_array.first.service_type == 'FEDEX_GROUND'
+          rates.first.service_type == 'FEDEX_GROUND'
         end
       end
 
@@ -183,12 +182,12 @@ module Fedex
         it_behaves_like 'successful rate request'
 
         it 'returns multiple rates' do
-          expect(rates_array.count).to be >= 1
+          expect(rates.count).to be >= 1
         end
 
         context 'each rate' do
           it 'has service type attribute' do
-            expect(rates_array.first).to respond_to(:service_type)
+            expect(rates.first).to respond_to(:service_type)
           end
         end
       end
@@ -199,7 +198,7 @@ module Fedex
         end
 
         it 'returns empty array' do
-          expect(rates_array).to eq []
+          expect(rates).to eq []
         end
       end
 
@@ -217,13 +216,14 @@ module Fedex
         let(:service_type) { nil }
 
         it 'returns multiple rates with correct special shipment rating' do
-          expect(rates_array.count).to be >= 1
-          expect(rates_array.map { |rate| rate.special_rating_applied }.uniq).to eq(['FEDEX_ONE_RATE'])
+          expect(rates.count).to be >= 1
+          expect(rates.last.response_xml).to be_empty
+          expect(rates.map { |rate| rate.special_rating_applied }.uniq).to eq(['FEDEX_ONE_RATE'])
         end
 
         context 'each rate' do
           it 'has service type attribute' do
-            expect(rates_array.first).to respond_to(:service_type)
+            expect(rates.first).to respond_to(:service_type)
           end
         end
       end
