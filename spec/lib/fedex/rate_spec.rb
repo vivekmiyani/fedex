@@ -55,8 +55,8 @@ module Fedex
           expect(rates.first).to be_an_instance_of(Rate)
         end
         it 'includes the request and response' do
-          expect(rates.first.response_xml).to include 'RateReply'
-          expect(rates.first.request_xml).to include 'RateRequest'
+          expect(rates.response_xml).to include 'RateReply'
+          expect(rates.request_xml).to include 'RateRequest'
         end
       end
 
@@ -198,7 +198,7 @@ module Fedex
         end
 
         it 'returns empty array' do
-          expect(rates).to eq []
+          expect(rates.count).to eq 0
         end
       end
 
@@ -217,7 +217,6 @@ module Fedex
 
         it 'returns multiple rates with correct special shipment rating' do
           expect(rates.count).to be >= 1
-          expect(rates.last.response_xml).to be_empty
           expect(rates.map { |rate| rate.special_rating_applied }.uniq).to eq(['FEDEX_ONE_RATE'])
         end
 
