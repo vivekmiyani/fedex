@@ -226,6 +226,16 @@ module Fedex
           end
         end
       end
+
+      context 'when fedex responds with an error', :vcr do
+        it 'raises a rate error with messages' do
+          expect { rates }.to raise_error(Fedex::RateError) do |error|
+            expect(error.message).to eq 'Rating is temporarily unavailable, please try again later.  '
+            expect(error.api_request).to include('RateRequest')
+            expect(error.api_response).to include('RateReply')
+          end
+        end
+      end
     end
   end
 end
