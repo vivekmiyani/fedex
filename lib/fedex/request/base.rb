@@ -242,7 +242,7 @@ module Fedex
       def add_master_tracking_id(xml)
         if @mps.key? :master_tracking_id
           xml.MasterTrackingId  do
-            xml.TrackingIdType @mps[:master_tracking_id][:tracking_id_type]
+            xml.TrackingIdType @mps[:master_tracking_id][:tracking_id_type] if @mps[:master_tracking_id][:tracking_id_type]
             xml.TrackingNumber @mps[:master_tracking_id][:tracking_number]
           end
         end
