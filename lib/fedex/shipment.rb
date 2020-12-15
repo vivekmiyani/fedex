@@ -12,6 +12,7 @@ require 'fedex/request/pickup'
 require 'fedex/request/pickup_availability'
 require 'fedex/request/service_availability'
 require 'fedex/request/upload_images'
+require 'fedex/request/validate_shipment'
 
 module Fedex
   class Shipment
@@ -117,6 +118,14 @@ module Fedex
     # param [Array] images, An array including a hash for each image being uploaded
     def upload_images(options = {})
       Request::UploadImages.new(@credentials, options).process_request
+    end
+
+    # @param [Hash] shipper, A hash containing the shipper information
+    # @param [Hash] recipient, A hash containing the recipient information
+    # @param [Array] packages, An array including a hash for each package being shipped
+    # @param [String] service_type, A valid fedex service type, to view a complete list of services Fedex::Shipment::SERVICE_TYPES
+    def validate_shipment(options = {})
+      Request::ValidateShipment.new(@credentials, options).process_request
     end
   end
 end
